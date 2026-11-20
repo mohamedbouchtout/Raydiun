@@ -1,0 +1,543 @@
+// !$*UTF8*$!
+{
+	"archiveVersion" = 1;
+	"objectVersion" = 56;
+	"objects" = {
+		"A00000000000000000000001" = {
+			"isa" = "PBXFileReference";
+			"path" = "Shared/Domain/WorkoutModels.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000002" = {
+			"isa" = "PBXFileReference";
+			"path" = "Shared/Domain/WorkoutEvent.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000003" = {
+			"isa" = "PBXFileReference";
+			"path" = "Shared/UI/EmptyScreen.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000004" = {
+			"isa" = "PBXFileReference";
+			"path" = "RaydiunWatch.app";
+			"explicitFileType" = "wrapper.application";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"A00000000000000000000005" = {
+			"isa" = "PBXFileReference";
+			"path" = "Watch/App/RaydiunWatchApp.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000006" = {
+			"isa" = "PBXFileReference";
+			"path" = "Watch/Resources/Assets.xcassets";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000007" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000005";
+		};
+		"A00000000000000000000008" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000001";
+		};
+		"A00000000000000000000009" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000002";
+		};
+		"A0000000000000000000000A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000003";
+		};
+		"A0000000000000000000000B" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"files" = (
+				"A00000000000000000000007",
+				"A00000000000000000000008",
+				"A00000000000000000000009",
+				"A0000000000000000000000A",
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000000C" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"files" = (
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000000D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000006";
+		};
+		"A0000000000000000000000E" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"files" = (
+				"A0000000000000000000000D",
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000000F" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+			"buildSettings" = {
+				"SDKROOT" = "watchos";
+				"SUPPORTED_PLATFORMS" = "watchos watchsimulator";
+				"TARGETED_DEVICE_FAMILY" = "4";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.raydiun.watchkitapp";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SWIFT_VERSION" = "6.0";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"WATCHOS_DEPLOYMENT_TARGET" = "10.0";
+				"MARKETING_VERSION" = "0.1.0";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Raydiun";
+				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
+				"INFOPLIST_KEY_WKApplication" = "YES";
+				"INFOPLIST_KEY_WKCompanionAppBundleIdentifier" = "com.example.raydiun";
+				"INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp" = "YES";
+				"SKIP_INSTALL" = "YES";
+			};
+		};
+		"A00000000000000000000010" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+			"buildSettings" = {
+				"SDKROOT" = "watchos";
+				"SUPPORTED_PLATFORMS" = "watchos watchsimulator";
+				"TARGETED_DEVICE_FAMILY" = "4";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.raydiun.watchkitapp";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SWIFT_VERSION" = "6.0";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"WATCHOS_DEPLOYMENT_TARGET" = "10.0";
+				"MARKETING_VERSION" = "0.1.0";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Raydiun";
+				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
+				"INFOPLIST_KEY_WKApplication" = "YES";
+				"INFOPLIST_KEY_WKCompanionAppBundleIdentifier" = "com.example.raydiun";
+				"INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp" = "YES";
+				"SKIP_INSTALL" = "YES";
+			};
+		};
+		"A00000000000000000000011" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"A0000000000000000000000F",
+				"A00000000000000000000010",
+			);
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"A00000000000000000000012" = {
+			"isa" = "PBXNativeTarget";
+			"name" = "RaydiunWatch";
+			"productName" = "RaydiunWatch";
+			"productReference" = "A00000000000000000000004";
+			"productType" = "com.apple.product-type.application";
+			"buildConfigurationList" = "A00000000000000000000011";
+			"buildPhases" = (
+				"A0000000000000000000000B",
+				"A0000000000000000000000C",
+				"A0000000000000000000000E",
+			);
+			"buildRules" = (
+			);
+			"dependencies" = (
+			);
+		};
+		"A00000000000000000000013" = {
+			"isa" = "PBXGroup";
+			"name" = "RaydiunWatch";
+			"children" = (
+				"A00000000000000000000005",
+				"A00000000000000000000006",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000014" = {
+			"isa" = "PBXFileReference";
+			"path" = "Raydiun.app";
+			"explicitFileType" = "wrapper.application";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"A00000000000000000000015" = {
+			"isa" = "PBXFileReference";
+			"path" = "iOS/App/RaydiunApp.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000016" = {
+			"isa" = "PBXFileReference";
+			"path" = "iOS/Resources/Assets.xcassets";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000017" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000015";
+		};
+		"A00000000000000000000018" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000001";
+		};
+		"A00000000000000000000019" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000002";
+		};
+		"A0000000000000000000001A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000003";
+		};
+		"A0000000000000000000001B" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"files" = (
+				"A00000000000000000000017",
+				"A00000000000000000000018",
+				"A00000000000000000000019",
+				"A0000000000000000000001A",
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000001C" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"files" = (
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000001D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000016";
+		};
+		"A0000000000000000000001E" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"files" = (
+				"A0000000000000000000001D",
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000001F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000004";
+		};
+		"A00000000000000000000020" = {
+			"isa" = "PBXCopyFilesBuildPhase";
+			"files" = (
+				"A0000000000000000000001F",
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+			"name" = "Embed Watch Content";
+			"dstPath" = "$(CONTENTS_FOLDER_PATH)/Watch";
+			"dstSubfolderSpec" = 16;
+		};
+		"A00000000000000000000021" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+			"buildSettings" = {
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.raydiun";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SWIFT_VERSION" = "6.0";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+				"MARKETING_VERSION" = "0.1.0";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Raydiun";
+				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
+				"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD" = "NO";
+			};
+		};
+		"A00000000000000000000022" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+			"buildSettings" = {
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.raydiun";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SWIFT_VERSION" = "6.0";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+				"MARKETING_VERSION" = "0.1.0";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Raydiun";
+				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
+				"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD" = "NO";
+			};
+		};
+		"A00000000000000000000023" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"A00000000000000000000021",
+				"A00000000000000000000022",
+			);
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"A00000000000000000000024" = {
+			"isa" = "PBXNativeTarget";
+			"name" = "Raydiun";
+			"productName" = "Raydiun";
+			"productReference" = "A00000000000000000000014";
+			"productType" = "com.apple.product-type.application";
+			"buildConfigurationList" = "A00000000000000000000023";
+			"buildPhases" = (
+				"A0000000000000000000001B",
+				"A0000000000000000000001C",
+				"A0000000000000000000001E",
+				"A00000000000000000000020",
+			);
+			"buildRules" = (
+			);
+			"dependencies" = (
+				"A00000000000000000000039",
+			);
+		};
+		"A00000000000000000000025" = {
+			"isa" = "PBXGroup";
+			"name" = "Raydiun";
+			"children" = (
+				"A00000000000000000000015",
+				"A00000000000000000000016",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000026" = {
+			"isa" = "PBXFileReference";
+			"path" = "RaydiunUITests.xctest";
+			"explicitFileType" = "wrapper.cfbundle";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"A00000000000000000000027" = {
+			"isa" = "PBXFileReference";
+			"path" = "Tests/UITests/NavigationTests.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000028" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A00000000000000000000027";
+		};
+		"A00000000000000000000029" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"files" = (
+				"A00000000000000000000028",
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000002A" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"files" = (
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000002B" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"files" = (
+			);
+			"buildActionMask" = 2147483647;
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"A0000000000000000000002C" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+			"buildSettings" = {
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.raydiun.uitests";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SWIFT_VERSION" = "6.0";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+				"TEST_TARGET_NAME" = "Raydiun";
+			};
+		};
+		"A0000000000000000000002D" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+			"buildSettings" = {
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.raydiun.uitests";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SWIFT_VERSION" = "6.0";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+				"TEST_TARGET_NAME" = "Raydiun";
+			};
+		};
+		"A0000000000000000000002E" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"A0000000000000000000002C",
+				"A0000000000000000000002D",
+			);
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"A0000000000000000000002F" = {
+			"isa" = "PBXNativeTarget";
+			"name" = "RaydiunUITests";
+			"productName" = "RaydiunUITests";
+			"productReference" = "A00000000000000000000026";
+			"productType" = "com.apple.product-type.bundle.ui-testing";
+			"buildConfigurationList" = "A0000000000000000000002E";
+			"buildPhases" = (
+				"A00000000000000000000029",
+				"A0000000000000000000002A",
+				"A0000000000000000000002B",
+			);
+			"buildRules" = (
+			);
+			"dependencies" = (
+				"A0000000000000000000003B",
+			);
+		};
+		"A00000000000000000000030" = {
+			"isa" = "PBXGroup";
+			"name" = "RaydiunUITests";
+			"children" = (
+				"A00000000000000000000027",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000031" = {
+			"isa" = "PBXGroup";
+			"name" = "Products";
+			"children" = (
+				"A00000000000000000000004",
+				"A00000000000000000000014",
+				"A00000000000000000000026",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000032" = {
+			"isa" = "PBXGroup";
+			"name" = "Shared";
+			"children" = (
+				"A00000000000000000000001",
+				"A00000000000000000000002",
+				"A00000000000000000000003",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000033" = {
+			"isa" = "PBXGroup";
+			"name" = "Raydiun";
+			"children" = (
+				"A00000000000000000000025",
+				"A00000000000000000000013",
+				"A00000000000000000000032",
+				"A00000000000000000000030",
+				"A00000000000000000000031",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A00000000000000000000034" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+			"buildSettings" = {
+				"ALWAYS_SEARCH_USER_PATHS" = "NO";
+			};
+		};
+		"A00000000000000000000035" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+			"buildSettings" = {
+				"ALWAYS_SEARCH_USER_PATHS" = "NO";
+			};
+		};
+		"A00000000000000000000036" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"A00000000000000000000034",
+				"A00000000000000000000035",
+			);
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"A00000000000000000000037" = {
+			"isa" = "PBXProject";
+			"mainGroup" = "A00000000000000000000033";
+			"productRefGroup" = "A00000000000000000000031";
+			"buildConfigurationList" = "A00000000000000000000036";
+			"compatibilityVersion" = "Xcode 14.0";
+			"developmentRegion" = "en";
+			"knownRegions" = (
+				"en",
+				"Base",
+			);
+			"projectDirPath" = "";
+			"projectRoot" = "";
+			"targets" = (
+				"A00000000000000000000024",
+				"A00000000000000000000012",
+				"A0000000000000000000002F",
+			);
+			"attributes" = {
+				"TargetAttributes" = {
+					"A0000000000000000000002F" = {
+						"TestTargetID" = "A00000000000000000000024";
+					};
+				};
+			};
+		};
+		"A00000000000000000000038" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "A00000000000000000000037";
+			"proxyType" = 1;
+			"remoteGlobalIDString" = "A00000000000000000000012";
+			"remoteInfo" = "RaydiunWatch";
+		};
+		"A00000000000000000000039" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "A00000000000000000000012";
+			"targetProxy" = "A00000000000000000000038";
+		};
+		"A0000000000000000000003A" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "A00000000000000000000037";
+			"proxyType" = 1;
+			"remoteGlobalIDString" = "A00000000000000000000024";
+			"remoteInfo" = "Raydiun";
+		};
+		"A0000000000000000000003B" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "A00000000000000000000024";
+			"targetProxy" = "A0000000000000000000003A";
+		};
+	};
+	"rootObject" = "A00000000000000000000037";
+}
