@@ -1,45 +1,67 @@
 import SwiftUI
+import UIKit
 
 @main
 struct RaydiunApp: App {
+    @State private var tab = PhoneTab.today
+    @State private var showingSettings = false
+    @State private var selectedDate = Date()
+    @State private var showingWorkout = false
+    @State private var workoutStore = PhoneWorkoutStore()
+
     var body: some Scene {
         WindowGroup {
-            TabView {
+            TabView(selection: $tab) {
                 NavigationStack {
-                    EmptyScreen(
-                        title: "No active workout",
-                        icon: "figure.strengthtraining.traditional",
-                        detail: "Your active workout will appear here."
+                    TodayView(
+                        selectedDate: $selectedDate,
+                        openTrain: { tab = .train },
+                        openLog: { tab = .log },
+                        openSettings: { showingSettings = true }
                     )
-                    .navigationTitle("Today")
                 }
-                .tabItem { Label("Today", systemImage: "calendar") }
+                .tabItem { Label("Today", systemImage: "house") }
+                .tag(PhoneTab.today)
 
                 NavigationStack {
-                    WorkoutTemplatesView()
+                    WorkoutTemplatesView { day in
+                        selectedDate = day
+                        tab = .today
+                    }
+                    .safeAreaInset(edge: .bottom) {
+                        Button(workoutStore.active == nil ? "Start Workout" : "Resume Workout",
+                               systemImage: "figure.strengthtraining.traditional") {
+                            showingWorkout = true
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(12)
+                        .frame(maxWidth: .infinity)
+                        .background(.regularMaterial)
+                    }
                 }
-                .tabItem { Label("Templates", systemImage: "list.bullet.clipboard") }
+                    .tabItem { Label("Train", systemImage: "dumbbell") }
+                    .tag(PhoneTab.train)
 
                 NavigationStack {
-                    EmptyScreen(
-                        title: "No workout history",
-                        icon: "clock",
-                        detail: "Completed workouts will appear here."
-                    )
-                    .navigationTitle("History")
+                    PhoneWorkoutLogView(store: workoutStore)
                 }
-                .tabItem { Label("History", systemImage: "clock") }
+                .tabItem { Label("Log", systemImage: "book.closed") }
+                .tag(PhoneTab.log)
 
                 NavigationStack {
-                    EmptyScreen(
-                        title: "No progress data",
-                        icon: "chart.line.uptrend.xyaxis",
-                        detail: "Log workouts to see your progress over time."
-                    )
-                    .navigationTitle("Progress")
+                    PhoneWorkoutProgressView(store: workoutStore)
                 }
-                .tabItem { Label("Progress", systemImage: "chart.line.uptrend.xyaxis") }
-
+                .tabItem { Label("Progress", systemImage: "chart.bar") }
+                .tag(PhoneTab.progress)
+            }
+            .tint(Color(uiColor: UIColor { traits in
+                traits.userInterfaceStyle == .dark ? .systemMint :
+                    UIColor(red: 0.07, green: 0.23, blue: 0.20, alpha: 1)
+            }))
+            .sheet(isPresented: $showingWorkout) {
+                PhoneWorkoutView(store: workoutStore)
+            }
+            .sheet(isPresented: $showingSettings) {
                 NavigationStack {
                     List {
                         Section("Privacy") {
@@ -47,9 +69,17 @@ struct RaydiunApp: App {
                         }
                     }
                     .navigationTitle("Settings")
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Done") { showingSettings = false }
+                        }
+                    }
                 }
-                .tabItem { Label("Settings", systemImage: "gearshape") }
             }
         }
     }
+}
+
+private enum PhoneTab: Hashable {
+    case today, train, log, progress
 }

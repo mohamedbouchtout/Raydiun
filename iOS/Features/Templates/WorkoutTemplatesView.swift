@@ -1,6 +1,11 @@
 import SwiftUI
 
 struct WorkoutTemplatesView: View {
+    @Environment(\.calendar) private var calendar
+    @Environment(\.colorScheme) private var colorScheme
+    @AppStorage(PhoneSchedule.storageKey) private var scheduleData = Data()
+
+    let openPlannedDay: (Date) -> Void
     private let store = WorkoutTemplateStore.local
     @State private var library = ExerciseLibrary()
     @State private var showingLibrary = false
@@ -13,33 +18,62 @@ struct WorkoutTemplatesView: View {
     var body: some View {
         Group {
             if let templates {
-                if templates.isEmpty {
-                    ContentUnavailableView {
-                        Label("No templates", systemImage: "list.bullet.clipboard")
-                    } description: {
-                        Text("Create a template to plan your next workout.")
-                    } actions: {
-                        Button("New Template", action: makeDraft)
-                            .accessibilityIdentifier("templates.empty.add")
-                    }
-                } else {
-                    List(templates) { template in
-                        Button {
-                            draft = template
-                        } label: {
-                            VStack(alignment: .leading) {
-                                Text(template.name)
-                                Text(template.goal.rawValue.capitalized)
+                List {
+                    scheduledWorkouts(templates)
+
+                    Section("Saved routines") {
+                        if templates.isEmpty {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("No templates").font(.headline)
+                                Text("Create a template to plan your next workout.")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
+                                Button("New Template", systemImage: "plus", action: makeDraft)
+                                    .buttonStyle(.borderedProminent)
+                                    .accessibilityIdentifier("templates.empty.add")
+                            }
+                            .padding(.vertical, 8)
+                        }
+
+                        ForEach(templates) { template in
+                            Button {
+                                draft = template
+                            } label: {
+                                HStack {
+                                    Image(systemName: "dumbbell")
+                                        .foregroundStyle(Color.accentColor)
+                                        .accessibilityHidden(true)
+                                    VStack(alignment: .leading) {
+                                        Text(template.name)
+                                            .font(.headline)
+                                        Text(template.goal.rawValue.capitalized)
+                                            .font(.subheadline)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(.secondary)
+                                        .accessibilityHidden(true)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .swipeActions(allowsFullSwipe: false) {
+                                Button("Delete", role: .destructive) { pendingDeletion = template }
+                            }
+                            .accessibilityAction(named: Text("Delete template")) {
+                                pendingDeletion = template
                             }
                         }
-                        .swipeActions(allowsFullSwipe: false) {
-                            Button("Delete", role: .destructive) { pendingDeletion = template }
+                    }
+
+                    Section("Build a workout") {
+                        Button {
+                            showingLibrary = true
+                        } label: {
+                            Label("Exercise Library", systemImage: "books.vertical")
                         }
-                        .accessibilityAction(named: Text("Delete template")) {
-                            pendingDeletion = template
-                        }
+                        .accessibilityIdentifier("train.exerciseLibrary")
                     }
                 }
             } else if loadFailed {
@@ -52,7 +86,7 @@ struct WorkoutTemplatesView: View {
                 ProgressView("Loading templates")
             }
         }
-        .navigationTitle("Templates")
+        .navigationTitle("Train")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("Exercise Library", systemImage: "books.vertical") { showingLibrary = true }
@@ -99,6 +133,64 @@ struct WorkoutTemplatesView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text("Your template is still available. Try deleting it again.")
+        }
+    }
+
+    @ViewBuilder
+    private func scheduledWorkouts(_ templates: [WorkoutTemplate]) -> some View {
+        let today = Date()
+        let week = PhoneSchedule.week(containing: today, calendar: calendar)
+        let schedule = PhoneSchedule.decode(scheduleData) ?? [:]
+        let planned = week.compactMap { day -> (Date, WorkoutTemplate)? in
+            let id = schedule[PhoneSchedule.key(for: day, calendar: calendar)]
+            guard let id, let template = templates.first(where: { $0.id == id }) else { return nil }
+            return (day, template)
+        }
+
+        if let next = planned.first(where: { $0.0 >= calendar.startOfDay(for: today) }) {
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Next planned workout").font(.caption.weight(.semibold))
+                    Text(next.1.name).font(.title2.bold())
+                    Text(next.0.formatted(.dateTime.weekday(.wide).month().day()))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Button("View Workout", systemImage: "chevron.right") { openPlannedDay(next.0) }
+                        .buttonStyle(.borderedProminent)
+                }
+                .padding(.vertical, 10)
+                .listRowBackground(LinearGradient(
+                    colors: PhonePalette.cardColors(for: colorScheme),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ))
+            }
+        }
+
+        Section("This week") {
+            if planned.isEmpty {
+                Text("No workouts planned this week")
+                    .foregroundStyle(.secondary)
+            }
+
+            ForEach(week, id: \.self) { day in
+                if let template = planned.first(where: { $0.0 == day })?.1 {
+                    Button {
+                        openPlannedDay(day)
+                    } label: {
+                        Label {
+                            VStack(alignment: .leading) {
+                                Text(template.name).font(.headline)
+                                Text(day.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "calendar")
+                        }
+                    }
+                }
+            }
         }
     }
 
