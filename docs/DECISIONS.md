@@ -68,3 +68,8 @@
 ### ADR-008 — Local iPhone workout templates
 - The iPhone planner stores the existing Codable template models in a versioned JSON file in Application Support. Writes replace the file atomically, and the list updates only after a successful write. A load error disables editing until the store can be read.
 - The editor works on a draft and normalizes exercise positions on save. The starter picker assigns stable exercise IDs that the editable library can retain in P0-06. All starter exercises are manual-only.
+
+### ADR-009 — Local iPhone exercise catalog
+- The catalog combines the six starter exercises and locally saved custom exercises. Starter IDs retain their original values so existing templates resolve. A custom exercise keeps its UUID and creation date when edited. Templates resolve names from the catalog by ID.
+- Custom definitions are stored in a separate versioned JSON file in Application Support. Writes replace the file atomically. A catalog load failure blocks edits and offers a retry.
+- Names must be unique within the catalog after trimming leading and trailing whitespace and comparing case-insensitively. A custom exercise can change its own capitalization. All starter and custom entries are manual-only.
