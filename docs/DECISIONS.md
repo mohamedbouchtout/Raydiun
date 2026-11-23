@@ -64,3 +64,7 @@
 - The event envelope contains explicit UUIDs for event, session, and origin device, a device sequence number, a wall-clock timestamp, a typed payload, and an optional superseded event ID. The payload discriminator is the event kind.
 - The decoder checks the schema version before decoding the payload. Version 1 is the first schema. Unsupported versions fail explicitly until a migration exists.
 - Loads are encoded as kilograms alongside the chosen display unit. Exercise and rep provenance are separate, and a missing exercise ID represents an unknown exercise.
+
+### ADR-008 — Local iPhone workout templates
+- The iPhone planner stores the existing Codable template models in a versioned JSON file in Application Support. Writes replace the file atomically, and the list updates only after a successful write. A load error disables editing until the store can be read.
+- The editor works on a draft and normalizes exercise positions on save. The starter picker assigns stable exercise IDs that the editable library can retain in P0-06. All starter exercises are manual-only.

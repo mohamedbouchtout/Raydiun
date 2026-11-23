@@ -16,12 +16,7 @@ struct RaydiunApp: App {
                 .tabItem { Label("Today", systemImage: "calendar") }
 
                 NavigationStack {
-                    EmptyScreen(
-                        title: "No templates",
-                        icon: "list.bullet.clipboard",
-                        detail: "Your workout plans will appear here."
-                    )
-                    .navigationTitle("Templates")
+                    WorkoutTemplatesView()
                 }
                 .tabItem { Label("Templates", systemImage: "list.bullet.clipboard") }
 

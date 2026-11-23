@@ -13,16 +13,20 @@
 - **P0-01** — Xcode 27.2 (27B52) has iOS and watchOS 27.2 SDKs. The starting repository had no Xcode project. Simulator listed no installed runtimes or available devices, and `devicectl` found no physical devices. See [DECISIONS.md](docs/DECISIONS.md).
 - **P0-02** — Xcode listed the iPhone, Watch, and iPhone UI test targets. Generic iOS Simulator `build-for-testing` and generic watchOS Simulator `build` passed with signing disabled. The iPhone build embeds the Watch app. See [README.md](README.md) for commands.
 - **P0-03** — Four macOS `swift test` tests passed, covering the version 1 fixture, identity and correction provenance round-trips, weight conversion, invalid weights, and rejection of unsupported schema versions.
-- **P0-04** — All five iPhone tabs and the Watch preview flow compile. End-to-end navigation and VoiceOver checks are pending simulator runtimes.
+- **P0-04** — All five iPhone tabs and the Watch preview flow compile. The owner confirmed P0-04 verification on 2026-11-22.
 
 ## Phase 1 — Working workout logger without ML (P0)
-- [ ] **P0-05: Workout template CRUD.** Add/edit/delete templates, exercise selection, target sets/rep range/rest duration, arbitrary exercise order, goal settings. Persist changes across relaunch. **Done:** CRUD integration tests; empty/cancel paths work.
+- [x] **P0-05: Workout template CRUD.** Add/edit/delete templates, exercise selection, target sets/rep range/rest duration, arbitrary exercise order, goal settings. Persist changes across relaunch. **Done:** CRUD integration tests; empty/cancel paths work.
 - [ ] **P0-06: Editable exercise library.** Seed initial built-ins and supported status; add/edit custom exercises with unique IDs; no custom recognition claim. **Done:** custom moves appear in plans and manual logging, proper duplicate-name behavior.
 - [ ] **P0-07: Manual workout session engine.** Start/pause/resume/finish sessions, choose/reorder exercises during session, add/edit reps and weights, finish sets, skip/undo last entry. **Done:** deterministic domain state tests incl double taps, out-of-order and interrupted transitions.
 - [ ] **P0-08: Persistent event journal.** Durable writes as each set completes, materialized workout projections, correction events, safe recovery on app restart. **Done:** crash/relaunch tests; corrections survive; no duplicate records.
 - [ ] **P0-09: Watch workout UI + controls.** Implement usable standalone start/tracking/manual set/rest/finish screens with large controls and permission/error fallbacks. **Done:** manually log several sets on watch simulator and verify local retention.
 - [ ] **P0-10: HealthKit workout lifecycle.** Integrate authorized `HKWorkoutSession`/builder when supported; manage pause/resume/end, background expectations, denied permissions. Test physical Watch. **Done:** authorized happy path and denial path; actual Apple Health write behavior documented.
 - [ ] **P0-11: Rest engine and haptics.** Goal-based configurable presets, per-exercise override, rest from last-rep/manual completion timestamp, start/skip/extend/end, notification/haptic best effort. **Done:** clock-injected timer tests; rest persists across UI navigation; real-device haptic test recorded.
+
+### Phase 1 verification
+
+- **P0-05** — Replaced the iPhone Templates placeholder with a list, exercise picker and draft editor backed by atomic local JSON storage. Three UI tests passed via `xcodebuild test` with simulator ad-hoc signing on iPhone 18 Pro (iOS 27.2). They covered navigation, cancel, and create/edit/delete across relaunches. A macOS check of the production store also verified exercise order, saved settings, and corrupt-file handling. All four Swift domain tests and the generic Watch Simulator build passed. Manual VoiceOver and physical-device checks were not run for this task.
 
 ## Phase 2 — Motion sensing, replay, counting (P0)
 - [ ] **P0-12: MotionSource abstraction.** Define protocol, timestamped sample type and mock replay; test sample sorting, units, out-of-order and missing data. **Done:** replay emits deterministic same values regardless of wall-clock.
@@ -93,8 +97,9 @@
 ## Progress log template (append after each agent session)
 | Date | Tasks attempted | Evidence (commands / actual devices) | Outcome | Remaining blockers |
 |---|---|---|---|---|
-| 2026-11-20 | P0-01 through P0-04 | Xcode 27.2 target listing, both generic simulator builds, four macOS domain tests | P0-01 through P0-03 complete. P0-04 navigation implemented. | Simulator navigation and VoiceOver checks remain pending. |
+| 2026-11-20 | P0-01 through P0-04 | Xcode 27.2 target listing, both generic simulator builds, four macOS domain tests | P0-01 through P0-03 complete. P0-04 navigation implemented. | Owner confirmed P0-04 verification on 2026-11-22. |
 | 2026-11-20 | GitHub CI and weekly Dependabot | Both YAML files parsed. Both CI build commands and all four domain tests passed locally. | CI configured for PRs, pushes to `main`, and published releases. Dependabot configured for GitHub Actions and Swift packages. | GitHub-hosted execution remains unverified. |
+| 2026-11-22 | P0-04 verification and P0-05 | Owner confirmation, three iPhone simulator UI tests, four Swift domain tests, macOS template store check, generic Watch Simulator build | P0-04 verified and P0-05 complete. | Manual VoiceOver and physical-device checks pending. |
 
 ## Owner hardware acceptance gate — Apple Watch SE (2nd generation, 2022)
 - [ ] **HW-SE2-01:** Record exact iPhone model, watchOS/iOS versions, Xcode version, pairing status and signing team. Never assume the Watch is running a particular watchOS version.
