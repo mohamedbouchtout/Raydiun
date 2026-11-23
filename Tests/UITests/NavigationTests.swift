@@ -7,15 +7,17 @@ final class NavigationTests: XCTestCase {
         app.launch()
 
         for (tab, content) in [
-            ("Today", "No active workout"),
-            ("Templates", "No templates"),
-            ("History", "No workout history"),
-            ("Progress", "No progress data"),
-            ("Settings", "Workout data stays on your devices")
+            ("Today", "Your first workout"),
+            ("Train", "No templates"),
+            ("Log", "No completed workouts"),
+            ("Progress", "No progress data")
         ] {
             app.tabBars.buttons[tab].tap()
             XCTAssertTrue(app.staticTexts[content].exists, "Missing content for \(tab)")
         }
+        app.tabBars.buttons["Today"].tap()
+        app.buttons["today.settings"].tap()
+        XCTAssertTrue(app.staticTexts["Workout data stays on your devices"].exists)
     }
 
     @MainActor
@@ -53,6 +55,35 @@ final class NavigationTests: XCTestCase {
         app.terminate()
         launchTemplates(in: app)
         XCTAssertTrue(app.staticTexts["No templates"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testPlannedWorkoutSurvivesRelaunch() {
+        let app = isolatedApp()
+        launchTemplates(in: app)
+        app.buttons["templates.empty.add"].tap()
+        app.textFields["template.name"].tap()
+        app.textFields["template.name"].typeText("Full Body A")
+        app.buttons["template.exercise.add"].tap()
+        app.buttons["Shoulder Press"].tap()
+        app.buttons["Save"].tap()
+
+        app.tabBars.buttons["Today"].tap()
+        let planButton = app.buttons["Plan a Workout"]
+        XCTAssertTrue(planButton.waitForExistence(timeout: 5))
+        planButton.tap()
+        app.buttons["Full Body A"].tap()
+        XCTAssertTrue(app.staticTexts["Shoulder Press"].waitForExistence(timeout: 5))
+
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["Full Body A"].waitForExistence(timeout: 5))
+
+        app.tabBars.buttons["Train"].tap()
+        let viewWorkout = app.buttons["View Workout"]
+        XCTAssertTrue(viewWorkout.waitForExistence(timeout: 5))
+        viewWorkout.tap()
+        XCTAssertTrue(app.staticTexts["Shoulder Press"].waitForExistence(timeout: 5))
     }
 
     @MainActor
@@ -117,6 +148,34 @@ final class NavigationTests: XCTestCase {
     }
 
     @MainActor
+    func testBlankWorkoutAppearsInLogAndWeeklyProgressAfterRelaunch() {
+        let app = isolatedApp()
+        app.launch()
+        app.tabBars.buttons["Train"].tap()
+        app.buttons["Start Workout"].tap()
+        app.buttons["Start Blank Workout"].tap()
+        app.buttons["Add Exercise"].tap()
+        app.buttons["Squat"].tap()
+        app.buttons["Log Set"].tap()
+        let reps = app.textFields["Reps"]
+        XCTAssertTrue(reps.waitForExistence(timeout: 5))
+        reps.tap()
+        reps.typeText("8")
+        app.buttons["Save"].tap()
+        XCTAssertTrue(app.staticTexts["Set 1: 8 reps"].waitForExistence(timeout: 5))
+        app.buttons["Finish Workout"].tap()
+        app.buttons["Close"].tap()
+
+        app.terminate()
+        app.launch()
+        app.tabBars.buttons["Log"].tap()
+        XCTAssertTrue(app.staticTexts["Squat"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["8 reps"].exists)
+        app.tabBars.buttons["Progress"].tap()
+        XCTAssertTrue(app.staticTexts["1 workout · 1 confirmed set"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
     private func replaceText(in field: XCUIElement, old: String, new: String) {
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: old.count) + new)
@@ -132,6 +191,6 @@ final class NavigationTests: XCTestCase {
     @MainActor
     private func launchTemplates(in app: XCUIApplication) {
         app.launch()
-        app.tabBars.buttons["Templates"].tap()
+        app.tabBars.buttons["Train"].tap()
     }
 }
