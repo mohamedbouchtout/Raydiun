@@ -2,6 +2,8 @@ import SwiftUI
 
 struct WorkoutTemplatesView: View {
     private let store = WorkoutTemplateStore.local
+    @State private var library = ExerciseLibrary()
+    @State private var showingLibrary = false
     @State private var templates: [WorkoutTemplate]?
     @State private var loadFailed = false
     @State private var draft: WorkoutTemplate?
@@ -52,6 +54,10 @@ struct WorkoutTemplatesView: View {
         }
         .navigationTitle("Templates")
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Exercise Library", systemImage: "books.vertical") { showingLibrary = true }
+                    .accessibilityIdentifier("exercise.library")
+            }
             if templates != nil {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add Template", systemImage: "plus", action: makeDraft)
@@ -63,7 +69,12 @@ struct WorkoutTemplatesView: View {
             if templates == nil && !loadFailed { load() }
         }
         .sheet(item: $draft) { template in
-            WorkoutTemplateEditor(template: template, onSave: save)
+            WorkoutTemplateEditor(template: template, library: library, onSave: save)
+        }
+        .sheet(isPresented: $showingLibrary) {
+            NavigationStack {
+                ExerciseLibraryView(library: library)
+            }
         }
         .confirmationDialog(
             "Delete template?", isPresented: Binding(
@@ -127,10 +138,12 @@ private struct WorkoutTemplateEditor: View {
     @State private var choosingExercise = false
     @State private var saveFailed = false
 
+    let library: ExerciseLibrary
     let onSave: (WorkoutTemplate) throws -> Void
 
-    init(template: WorkoutTemplate, onSave: @escaping (WorkoutTemplate) throws -> Void) {
+    init(template: WorkoutTemplate, library: ExerciseLibrary, onSave: @escaping (WorkoutTemplate) throws -> Void) {
         _template = State(initialValue: template)
+        self.library = library
         self.onSave = onSave
     }
 
@@ -153,10 +166,10 @@ private struct WorkoutTemplateEditor: View {
                 Section {
                     ForEach($template.exercises) { $exercise in
                         NavigationLink {
-                            TemplateExerciseEditor(exercise: $exercise)
+                            TemplateExerciseEditor(exercise: $exercise, name: library.name(for: exercise.exerciseId))
                         } label: {
                             VStack(alignment: .leading) {
-                                Text(StarterExercises.name(for: exercise.exerciseId))
+                                Text(library.name(for: exercise.exerciseId))
                                 Text("\(exercise.targetSets) sets · \(exercise.repMin)–\(exercise.repMax) reps · \(exercise.initialRestSeconds) s rest")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
@@ -190,16 +203,19 @@ private struct WorkoutTemplateEditor: View {
                     EditButton().disabled(template.exercises.isEmpty)
                 }
             }
+            .task { library.loadIfNeeded() }
             .sheet(isPresented: $choosingExercise) {
                 NavigationStack {
-                    List(StarterExercises.all) { exercise in
-                        Button(exercise.name) {
-                            template.exercises.append(TemplateExercise(
-                                id: UUID(), exerciseId: exercise.id, targetSets: 3, repMin: 8,
-                                repMax: 12, initialRestSeconds: 90,
-                                position: template.exercises.count, preferredWeightUnit: .kg
-                            ))
-                            choosingExercise = false
+                    ExerciseCatalogContent(library: library) { exercises in
+                        List(exercises) { exercise in
+                            Button(exercise.name) {
+                                template.exercises.append(TemplateExercise(
+                                    id: UUID(), exerciseId: exercise.id, targetSets: 3, repMin: 8,
+                                    repMax: 12, initialRestSeconds: 90,
+                                    position: template.exercises.count, preferredWeightUnit: .kg
+                                ))
+                                choosingExercise = false
+                            }
                         }
                     }
                     .navigationTitle("Choose Exercise")
@@ -234,6 +250,7 @@ private struct WorkoutTemplateEditor: View {
 
 private struct TemplateExerciseEditor: View {
     @Binding var exercise: TemplateExercise
+    let name: String
 
     var body: some View {
         Form {
@@ -246,29 +263,6 @@ private struct TemplateExerciseEditor: View {
             Stepper("Rest: \(exercise.initialRestSeconds) seconds", value: $exercise.initialRestSeconds, in: 0...3600, step: 5)
                 .accessibilityIdentifier("exercise.rest")
         }
-        .navigationTitle(StarterExercises.name(for: exercise.exerciseId))
-    }
-}
-
-private enum StarterExercises {
-    static let all = [
-        exercise(1, "Biceps Curl", "Arms"),
-        exercise(2, "Shoulder Press", "Shoulders"),
-        exercise(3, "Squat", "Legs"),
-        exercise(4, "Bench Press", "Chest"),
-        exercise(5, "Dumbbell Row", "Back"),
-        exercise(6, "Deadlift", "Posterior Chain")
-    ]
-
-    static func name(for id: UUID) -> String {
-        all.first { $0.id == id }?.name ?? "Unknown Exercise"
-    }
-
-    private static func exercise(_ number: UInt8, _ name: String, _ category: String) -> ExerciseDefinition {
-        ExerciseDefinition(
-            id: UUID(uuid: (0x44, 0x2C, 0x02, 0xEF, 0x83, 0x8C, 0x49, 0x90, 0x91, 0xB4, 0x24, 0x3B, 0x11, 0x5C, 0xA0, number)),
-            name: name, movementCategory: category, supportTier: .manualOnly,
-            isCustom: false, createdAt: Date(timeIntervalSince1970: 0)
-        )
+        .navigationTitle(name)
     }
 }

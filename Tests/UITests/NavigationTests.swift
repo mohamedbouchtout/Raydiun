@@ -69,6 +69,60 @@ final class NavigationTests: XCTestCase {
     }
 
     @MainActor
+    func testCustomExerciseValidationAndRenameUpdateSavedTemplate() {
+        let app = isolatedApp()
+        launchTemplates(in: app)
+        app.buttons["exercise.library"].tap()
+        app.buttons["exercise.library.add"].tap()
+
+        let name = app.textFields["exercise.custom.name"]
+        let save = app.buttons["exercise.custom.save"]
+        let validation = app.staticTexts["exercise.custom.validation"]
+        save.tap()
+        XCTAssertEqual(validation.label, "Enter an exercise name.")
+        name.tap()
+        name.typeText(" squat ")
+        save.tap()
+        XCTAssertEqual(validation.label, "An exercise with this name already exists.")
+
+        replaceText(in: name, old: " squat ", new: "Step Up")
+        save.tap()
+        app.buttons["Done"].tap()
+        app.buttons["templates.empty.add"].tap()
+        app.textFields["template.name"].tap()
+        app.textFields["template.name"].typeText("Leg Day")
+        app.buttons["template.exercise.add"].tap()
+        app.buttons["Step Up"].tap()
+        app.buttons["Save"].tap()
+
+        app.terminate()
+        launchTemplates(in: app)
+        app.buttons["exercise.library"].tap()
+        let custom = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Step Up")).firstMatch
+        XCTAssertTrue(custom.waitForExistence(timeout: 5))
+        custom.tap()
+        replaceText(in: name, old: "Step Up", new: "STEP UP")
+        save.tap()
+        XCTAssertTrue(app.navigationBars["Exercise Library"].exists)
+
+        app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "STEP UP")).firstMatch.tap()
+        replaceText(in: name, old: "STEP UP", new: "Box Step Up")
+        save.tap()
+        app.buttons["Done"].tap()
+
+        app.terminate()
+        launchTemplates(in: app)
+        app.staticTexts["Leg Day"].tap()
+        XCTAssertTrue(app.staticTexts["Box Step Up"].exists)
+    }
+
+    @MainActor
+    private func replaceText(in field: XCUIElement, old: String, new: String) {
+        field.tap()
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: old.count) + new)
+    }
+
+    @MainActor
     private func isolatedApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["RAYDIUN_UI_TEST_STORE"] = UUID().uuidString

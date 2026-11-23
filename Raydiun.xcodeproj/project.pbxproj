@@ -192,6 +192,26 @@
 			"isa" = "PBXBuildFile";
 			"fileRef" = "B10000000000000000000001";
 		};
+		"B10000000000000000000002" = {
+			"isa" = "PBXFileReference";
+			"path" = "iOS/Data/ExerciseLibrary.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"B20000000000000000000002" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B10000000000000000000002";
+		};
+		"B10000000000000000000003" = {
+			"isa" = "PBXFileReference";
+			"path" = "iOS/Features/Exercises/ExerciseLibraryView.swift";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"B20000000000000000000003" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B10000000000000000000003";
+		};
 		"A00000000000000000000015" = {
 			"isa" = "PBXFileReference";
 			"path" = "iOS/App/RaydiunApp.swift";
@@ -225,6 +245,8 @@
 			"files" = (
 				"A00000000000000000000017",
 				"B20000000000000000000001",
+				"B20000000000000000000003",
+				"B20000000000000000000002",
 				"B20000000000000000000000",
 				"A00000000000000000000018",
 				"A00000000000000000000019",
@@ -348,6 +370,8 @@
 			"children" = (
 				"A00000000000000000000015",
 				"B10000000000000000000001",
+				"B10000000000000000000003",
+				"B10000000000000000000002",
 				"B10000000000000000000000",
 				"A00000000000000000000016",
 			);
