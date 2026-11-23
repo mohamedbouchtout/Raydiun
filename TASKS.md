@@ -1,12 +1,19 @@
 # TASKS.md — Build Plan and Executable Checklist
 
-> Agent rules: read [AGENTS.md](AGENTS.md), [PRODUCT.md](docs/PRODUCT.md), [ARCHITECTURE.md](docs/ARCHITECTURE.md), [ML_COVERAGE.md](docs/ML_COVERAGE.md), and [DECISIONS.md](docs/DECISIONS.md). Complete P0 tasks in order. Each checked task needs commit/change summary, build/test evidence, known limitations. P1 cannot be described as ready while P0 is incomplete. Tasks are intentionally sized for incremental Codex runs. **All tasks start unchecked.**
+> Agent rules: read [AGENTS.md](AGENTS.md), [PRODUCT.md](docs/PRODUCT.md), [ARCHITECTURE.md](docs/ARCHITECTURE.md), [ML_COVERAGE.md](docs/ML_COVERAGE.md), and [DECISIONS.md](docs/DECISIONS.md). Complete P0 tasks in order. Each checked task needs commit/change summary, build/test evidence, known limitations. P1 cannot be described as ready while P0 is incomplete. Tasks are intentionally sized for incremental Codex runs.
 
 ## Phase 0 — Environment and repository foundation (P0)
-- [ ] **P0-01: Inspect developer environment.** Run `xcodebuild -version`, list simulators, inspect existing repo/project and targets, confirm hardware dependencies. Record actual findings in [DECISIONS.md](docs/DECISIONS.md). **Done:** environment recorded; no imaginary targets/schemes.
-- [ ] **P0-02: Scaffold Xcode project.** Create native SwiftUI iOS + watchOS apps, shared Swift module/package or shared source targets, unit/UI tests, assets, gitignore and coherent app naming. Configure target membership and entitlements only as needed. **Done:** both targets build for available generic simulator destinations (or documented SDK blocker), clear run instructions.
-- [ ] **P0-03: Domain entities and serialized events.** Implement definitions from [ARCHITECTURE.md](docs/ARCHITECTURE.md) with stable UUIDs, source/confidence provenance, unit-safe weight conversion, versioned event serialization. **Done:** unit tests for decoding, weight conversion, ID uniqueness, and migration/version rejection.
-- [ ] **P0-04: Design system and navigation skeleton.** iPhone Today/Templates/History/Progress/Settings tabs and Watch Start/Active/Rest/Summary states. Use mock data explicitly labeled `Preview` only. **Done:** navigable simulator UI, VoiceOver labels, screenshots optional, no live-data claims. **Stop for user review after this task.**
+- [x] **P0-01: Inspect developer environment.** Run `xcodebuild -version`, list simulators, inspect existing repo/project and targets, confirm hardware dependencies. Record actual findings in [DECISIONS.md](docs/DECISIONS.md). **Done:** environment recorded; no imaginary targets/schemes.
+- [x] **P0-02: Scaffold Xcode project.** Create native SwiftUI iOS + watchOS apps, shared Swift module/package or shared source targets, unit/UI tests, assets, gitignore and coherent app naming. Configure target membership and entitlements only as needed. **Done:** both targets build for available generic simulator destinations (or documented SDK blocker), clear run instructions.
+- [x] **P0-03: Domain entities and serialized events.** Implement definitions from [ARCHITECTURE.md](docs/ARCHITECTURE.md) with stable UUIDs, source/confidence provenance, unit-safe weight conversion, versioned event serialization. **Done:** unit tests for decoding, weight conversion, ID uniqueness, and migration/version rejection.
+- [x] **P0-04: Design system and navigation skeleton.** iPhone Today/Templates/History/Progress/Settings tabs and Watch Start/Active/Rest/Summary states. Use mock data explicitly labeled `Preview` only. **Done:** navigable simulator UI, VoiceOver labels, screenshots optional, no live-data claims. **Stop for user review after this task.**
+
+### Phase 0 verification
+
+- **P0-01** — Xcode 27.2 (27B52) has iOS and watchOS 27.2 SDKs. The starting repository had no Xcode project. Simulator listed no installed runtimes or available devices, and `devicectl` found no physical devices. See [DECISIONS.md](docs/DECISIONS.md).
+- **P0-02** — Xcode listed the iPhone, Watch, and iPhone UI test targets. Generic iOS Simulator `build-for-testing` and generic watchOS Simulator `build` passed with signing disabled. The iPhone build embeds the Watch app. See [README.md](README.md) for commands.
+- **P0-03** — Four macOS `swift test` tests passed, covering the version 1 fixture, identity and correction provenance round-trips, weight conversion, invalid weights, and rejection of unsupported schema versions.
+- **P0-04** — All five iPhone tabs and the Watch preview flow compile. End-to-end navigation and VoiceOver checks are pending simulator runtimes.
 
 ## Phase 1 — Working workout logger without ML (P0)
 - [ ] **P0-05: Workout template CRUD.** Add/edit/delete templates, exercise selection, target sets/rep range/rest duration, arbitrary exercise order, goal settings. Persist changes across relaunch. **Done:** CRUD integration tests; empty/cancel paths work.
@@ -86,6 +93,8 @@
 ## Progress log template (append after each agent session)
 | Date | Tasks attempted | Evidence (commands / actual devices) | Outcome | Remaining blockers |
 |---|---|---|---|---|
+| 2026-11-20 | P0-01 through P0-04 | Xcode 27.2 target listing, both generic simulator builds, four macOS domain tests | P0-01 through P0-03 complete. P0-04 navigation implemented. | Simulator navigation and VoiceOver checks remain pending. |
+| 2026-11-20 | GitHub CI and weekly Dependabot | Both YAML files parsed. Both CI build commands and all four domain tests passed locally. | CI configured for PRs, pushes to `main`, and published releases. Dependabot configured for GitHub Actions and Swift packages. | GitHub-hosted execution remains unverified. |
 
 ## Owner hardware acceptance gate — Apple Watch SE (2nd generation, 2022)
 - [ ] **HW-SE2-01:** Record exact iPhone model, watchOS/iOS versions, Xcode version, pairing status and signing team. Never assume the Watch is running a particular watchOS version.
