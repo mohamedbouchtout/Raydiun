@@ -15,6 +15,8 @@
 - **P0-03** — Four macOS `swift test` tests passed, covering the version 1 fixture, identity and correction provenance round-trips, weight conversion, invalid weights, and rejection of unsupported schema versions.
 - **P0-04** — All five iPhone tabs and the Watch preview flow compile. The owner confirmed P0-04 verification on 2026-11-22.
 
+- **PR 7 navigation and branding** — Restored the enlarged, open-center app icon on iPhone and Watch. The native iPhone bar has five icon-only destinations with Coach in the center. Coach reads weekly confirmed totals from the local journal and stores chats on device. Verified tab navigation and saved-report reopening after relaunch on iPhone 18 Pro simulator (iOS 27.2). Four domain tests passed. Free-form generation on an eligible physical iPhone remains unverified.
+
 ## Phase 1 — Working workout logger without ML (P0)
 - [x] **P0-05: Workout template CRUD.** Add/edit/delete templates, exercise selection, target sets/rep range/rest duration, arbitrary exercise order, goal settings. Persist changes across relaunch. **Done:** CRUD integration tests; empty/cancel paths work.
 - [x] **P0-06: Editable exercise library.** Seed initial built-ins and supported status; add/edit custom exercises with unique IDs; no custom recognition claim. **Done:** custom moves appear in plans and manual logging, proper duplicate-name behavior.
