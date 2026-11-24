@@ -9,15 +9,31 @@ final class NavigationTests: XCTestCase {
         for (tab, content) in [
             ("Today", "Your first workout"),
             ("Train", "No templates"),
+            ("Coach", "New chat"),
             ("Log", "No completed workouts"),
             ("Progress", "No progress data")
         ] {
             app.tabBars.buttons[tab].tap()
-            XCTAssertTrue(app.staticTexts[content].exists, "Missing content for \(tab)")
+            XCTAssertTrue(app.descendants(matching: .any)[content].firstMatch.exists, "Missing content for \(tab)")
         }
         app.tabBars.buttons["Today"].tap()
         app.buttons["today.settings"].tap()
         XCTAssertTrue(app.staticTexts["Workout data stays on your devices"].exists)
+    }
+
+    @MainActor
+    func testCoachReopensWeeklyReport() {
+        let app = isolatedApp()
+        app.launch()
+        app.tabBars.buttons["Coach"].tap()
+        app.buttons["New chat"].tap()
+        app.buttons["Show my weekly report"].tap()
+        XCTAssertTrue(app.staticTexts["You"].waitForExistence(timeout: 5))
+        app.terminate()
+        app.launch()
+        app.tabBars.buttons["Coach"].tap()
+        app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "coach.chat.")).firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["You"].waitForExistence(timeout: 5))
     }
 
     @MainActor

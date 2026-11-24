@@ -20,7 +20,7 @@ struct RaydiunApp: App {
                         openSettings: { showingSettings = true }
                     )
                 }
-                .tabItem { Label("Today", systemImage: "house") }
+                .tabItem { Image(systemName: "house").accessibilityLabel("Today") }
                 .tag(PhoneTab.today)
 
                 NavigationStack {
@@ -39,25 +39,28 @@ struct RaydiunApp: App {
                         .background(.regularMaterial)
                     }
                 }
-                    .tabItem { Label("Train", systemImage: "dumbbell") }
+                    .tabItem { Image(systemName: "dumbbell").accessibilityLabel("Train") }
                     .tag(PhoneTab.train)
+
+                NavigationStack {
+                    CoachView(store: workoutStore) { tab = .progress }
+                }
+                .tabItem { Image("CoachMark").renderingMode(.template).accessibilityLabel("Coach") }
+                .tag(PhoneTab.coach)
 
                 NavigationStack {
                     PhoneWorkoutLogView(store: workoutStore)
                 }
-                .tabItem { Label("Log", systemImage: "book.closed") }
+                .tabItem { Image(systemName: "book.closed").accessibilityLabel("Log") }
                 .tag(PhoneTab.log)
 
                 NavigationStack {
                     PhoneWorkoutProgressView(store: workoutStore)
                 }
-                .tabItem { Label("Progress", systemImage: "chart.bar") }
+                .tabItem { Image(systemName: "chart.bar").accessibilityLabel("Progress") }
                 .tag(PhoneTab.progress)
             }
-            .tint(Color(uiColor: UIColor { traits in
-                traits.userInterfaceStyle == .dark ? .systemMint :
-                    UIColor(red: 0.07, green: 0.23, blue: 0.20, alpha: 1)
-            }))
+            .tint(.accentColor)
             .sheet(isPresented: $showingWorkout) {
                 PhoneWorkoutView(store: workoutStore)
             }
@@ -81,5 +84,5 @@ struct RaydiunApp: App {
 }
 
 private enum PhoneTab: Hashable {
-    case today, train, log, progress
+    case today, train, coach, log, progress
 }
