@@ -36,6 +36,7 @@ struct CoachView: View {
                 Text(report)
                 Button("View detailed progress", action: openProgress)
             } header: { Text("Training status").textCase(nil) }
+            .listRowBackground(PhonePalette.surface)
             Section {
                 Button("New chat", systemImage: "square.and.pencil") { chatID = UUID() }
                     .disabled(archive.loadFailed)
@@ -53,7 +54,9 @@ struct CoachView: View {
                     .accessibilityIdentifier("coach.chat.\(chat.id)")
                 }
             } header: { Text("Conversations") }
+            .listRowBackground(PhonePalette.surface)
         }
+        .raydiunScreen()
         .navigationTitle("Coach")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { CoachMark(size: 32) }
@@ -126,7 +129,7 @@ private struct CoachConversation: View {
                         Text(message.isQuestion ? "You" : "Coach").font(.caption.bold())
                         Text(message.text).textSelection(.enabled)
                     }
-                    .padding().background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)).id(message.id)
+                    .padding().raydiunCard(radius: 16).id(message.id)
                 }
                 if messages.isEmpty {
                     Button("Show my weekly report") {
@@ -163,8 +166,9 @@ private struct CoachConversation: View {
                 }
                 .labelStyle(.iconOnly)
                 .disabled(!available || archive.busy.contains(id) || draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }.padding().background(.bar)
+            }.padding().background(PhonePalette.surface)
         }
+        .raydiunScreen()
         .navigationTitle("Workout chat").navigationBarTitleDisplayMode(.inline)
     }
 

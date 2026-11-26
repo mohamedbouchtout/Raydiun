@@ -41,13 +41,16 @@ struct ExerciseLibraryView: View {
                         Text("No custom exercises").foregroundStyle(.secondary)
                     }
                 }
+                .listRowBackground(PhonePalette.surface)
                 Section("Built-In Exercises") {
                     ForEach(exercises.filter { !$0.isCustom }) { exercise in
                         exerciseLabel(exercise)
                     }
                 }
+                .listRowBackground(PhonePalette.surface)
             }
         }
+        .raydiunScreen()
         .navigationTitle("Exercise Library")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -111,7 +114,9 @@ private struct CustomExerciseEditor: View {
                     Text("Custom exercises are available for manual selection.")
                 }
             }
+            .listRowBackground(PhonePalette.surface)
         }
+        .raydiunScreen()
         .navigationTitle(exerciseID == nil ? "New Exercise" : "Edit Exercise")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: name) { validationMessage = nil }
