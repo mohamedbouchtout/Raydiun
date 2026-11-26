@@ -2,6 +2,9 @@ import SwiftUI
 
 struct PhoneWorkoutView: View {
     let store: PhoneWorkoutStore
+    let preferredTemplateID: UUID?
+    let setup: TrainingSetupStore
+    let dismissWalkthrough: () -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var library = ExerciseLibrary()
     @State private var templates: [WorkoutTemplate] = []
@@ -27,6 +30,7 @@ struct PhoneWorkoutView: View {
                     startContent
                 }
             }
+            .raydiunScreen()
             .navigationTitle(store.active?.title ?? "Start Workout")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } }
@@ -49,6 +53,7 @@ struct PhoneWorkoutView: View {
                             ContentUnavailableView("Exercise library unavailable", systemImage: "exclamationmark.triangle")
                         }
                     }
+                    .raydiunScreen()
                     .navigationTitle("Add Exercise")
                     .toolbar { Button("Cancel") { choosingExercise = false } }
                 }
@@ -66,6 +71,7 @@ struct PhoneWorkoutView: View {
                             Text("lb").tag(WeightUnit.lb)
                         }
                     }
+                    .raydiunScreen()
                     .navigationTitle(editingSet == nil ? "Log Set" : "Edit Set")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -87,37 +93,69 @@ struct PhoneWorkoutView: View {
         }
     }
 
+    @ViewBuilder
+    private var walkthroughGuide: some View {
+        if [.start, .logSet, .finish, .viewLog].contains(setup.walkthrough) {
+            Section {
+                FirstWorkoutGuide(step: setup.walkthrough, onDismiss: dismissWalkthrough)
+            }
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
+        }
+    }
+
     private var startContent: some View {
         List {
+            walkthroughGuide
+            if let preferred = templates.first(where: { $0.id == preferredTemplateID }) {
+                Section("Scheduled workout") {
+                    templateButton(preferred)
+                }
+                .listRowBackground(PhonePalette.surface)
+            }
             Section("Manual training") {
                 Button("Start Blank Workout", systemImage: "plus") {
                     perform { try store.start(template: nil, library: library) }
                 }
             }
-            Section("From a saved template") {
-                if let templateError {
-                    Text(templateError).foregroundStyle(.secondary)
-                    Button("Retry", action: reloadTemplates)
-                } else if templates.isEmpty {
-                    Text("No saved templates. Start blank or create one in Train.")
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(templates) { template in
-                        Button(template.name) {
-                            perform { try store.start(template: template, library: library) }
-                        }
-                    }
-                }
+            .listRowBackground(PhonePalette.surface)
+            if templateError != nil || templates.isEmpty || templates.contains(where: { $0.id != preferredTemplateID }) {
+                savedTemplates
             }
             Section {
                 Text("Manual iPhone logging only. Motion recognition and Watch tracking are unavailable.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
+            .listRowBackground(PhonePalette.surface)
         }
+    }
+
+    private func templateButton(_ template: WorkoutTemplate) -> some View {
+        Button(template.name) {
+            perform { try store.start(template: template, library: library) }
+        }
+    }
+
+    private var savedTemplates: some View {
+        Section("From a saved template") {
+            if let templateError {
+                Text(templateError).foregroundStyle(.secondary)
+                Button("Retry", action: reloadTemplates)
+            } else if templates.isEmpty {
+                Text("No saved templates. Start blank or create one in Train.")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(templates.filter { $0.id != preferredTemplateID }) { template in
+                    templateButton(template)
+                }
+            }
+        }
+        .listRowBackground(PhonePalette.surface)
     }
 
     private func activeContent(_ workout: PhoneWorkoutSummary) -> some View {
         List {
+            walkthroughGuide
             Section {
                 LabeledContent("Started", value: workout.session.startedAt.formatted(date: .abbreviated, time: .shortened))
                 Text(workout.session.status == .paused ? "Paused" : "In progress")
@@ -136,6 +174,7 @@ struct PhoneWorkoutView: View {
                     Button("Start Rest", systemImage: "timer") { perform { try store.rest(seconds: restSeconds) } }
                 }
             }
+            .listRowBackground(PhonePalette.surface)
             ForEach(workout.exercises) { exercise in
                 Section(exercise.name) {
                     ForEach(exercise.sets) { set in
@@ -156,6 +195,7 @@ struct PhoneWorkoutView: View {
                         Button("Log Set", systemImage: "plus") { openEditor(for: exercise.id) }
                     }
                 }
+                .listRowBackground(PhonePalette.surface)
             }
             Section {
                 Button("Add Exercise", systemImage: "plus") { choosingExercise = true }
@@ -164,6 +204,7 @@ struct PhoneWorkoutView: View {
                     perform { try store.finish() }
                 }
             }
+            .listRowBackground(PhonePalette.surface)
         }
     }
 
@@ -258,10 +299,12 @@ struct PhoneWorkoutLogView: View {
                     } header: {
                         Text("\(workout.title) · \(workout.session.endedAt?.formatted(date: .abbreviated, time: .shortened) ?? "")")
                     }
+                    .listRowBackground(PhonePalette.surface)
                 }
             }
         }
-        .navigationTitle("Log")
+        .raydiunScreen()
+        .navigationTitle("Training Log")
     }
 }
 
@@ -309,9 +352,11 @@ struct PhoneWorkoutProgressView: View {
                             .font(.subheadline)
                     }
                     .padding(.vertical, 4)
+                    .listRowBackground(PhonePalette.surface)
                 }
             }
         }
+        .raydiunScreen()
         .navigationTitle("Progress")
     }
 }

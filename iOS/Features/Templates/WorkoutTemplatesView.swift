@@ -2,9 +2,9 @@ import SwiftUI
 
 struct WorkoutTemplatesView: View {
     @Environment(\.calendar) private var calendar
-    @Environment(\.colorScheme) private var colorScheme
     @AppStorage(PhoneSchedule.storageKey) private var scheduleData = Data()
 
+    let setup: TrainingSetupStore
     let openPlannedDay: (Date) -> Void
     private let store = WorkoutTemplateStore.local
     @State private var library = ExerciseLibrary()
@@ -66,6 +66,7 @@ struct WorkoutTemplatesView: View {
                             }
                         }
                     }
+                    .listRowBackground(PhonePalette.surface)
 
                     Section("Build a workout") {
                         Button {
@@ -75,6 +76,7 @@ struct WorkoutTemplatesView: View {
                         }
                         .accessibilityIdentifier("train.exerciseLibrary")
                     }
+                    .listRowBackground(PhonePalette.surface)
                 }
             } else if loadFailed {
                 ContentUnavailableView {
@@ -86,6 +88,7 @@ struct WorkoutTemplatesView: View {
                 ProgressView("Loading templates")
             }
         }
+        .raydiunScreen()
         .navigationTitle("Train")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -102,6 +105,7 @@ struct WorkoutTemplatesView: View {
         .task {
             if templates == nil && !loadFailed { load() }
         }
+        .onChange(of: setup.revision) { _, _ in load() }
         .sheet(item: $draft) { template in
             WorkoutTemplateEditor(template: template, library: library, onSave: save)
         }
@@ -143,6 +147,7 @@ struct WorkoutTemplatesView: View {
         let schedule = PhoneSchedule.decode(scheduleData) ?? [:]
         let planned = week.compactMap { day -> (Date, WorkoutTemplate)? in
             let id = schedule[PhoneSchedule.key(for: day, calendar: calendar)]
+                ?? setup.recurringTemplate(on: day, calendar: calendar)
             guard let id, let template = templates.first(where: { $0.id == id }) else { return nil }
             return (day, template)
         }
@@ -159,11 +164,7 @@ struct WorkoutTemplatesView: View {
                         .buttonStyle(.borderedProminent)
                 }
                 .padding(.vertical, 10)
-                .listRowBackground(LinearGradient(
-                    colors: PhonePalette.cardColors(for: colorScheme),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
+                .listRowBackground(PhonePalette.badge)
             }
         }
 
@@ -192,6 +193,7 @@ struct WorkoutTemplatesView: View {
                 }
             }
         }
+        .listRowBackground(PhonePalette.surface)
     }
 
     private func load() {
@@ -224,7 +226,7 @@ struct WorkoutTemplatesView: View {
     }
 }
 
-private struct WorkoutTemplateEditor: View {
+struct WorkoutTemplateEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var template: WorkoutTemplate
     @State private var choosingExercise = false
@@ -255,6 +257,7 @@ private struct WorkoutTemplateEditor: View {
                         Text("Endurance").tag(WorkoutGoal.endurance)
                     }
                 }
+                .listRowBackground(PhonePalette.surface)
                 Section {
                     ForEach($template.exercises) { $exercise in
                         NavigationLink {
@@ -280,7 +283,9 @@ private struct WorkoutTemplateEditor: View {
                         Text("Add an exercise to save this template.")
                     }
                 }
+                .listRowBackground(PhonePalette.surface)
             }
+            .raydiunScreen()
             .navigationTitle("Workout Template")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -299,7 +304,7 @@ private struct WorkoutTemplateEditor: View {
             .sheet(isPresented: $choosingExercise) {
                 NavigationStack {
                     ExerciseCatalogContent(library: library) { exercises in
-                        List(exercises) { exercise in
+                        List(exercises.filter(\.isCustom) + exercises.filter { !$0.isCustom }) { exercise in
                             Button(exercise.name) {
                                 template.exercises.append(TemplateExercise(
                                     id: UUID(), exerciseId: exercise.id, targetSets: 3, repMin: 8,
@@ -310,6 +315,7 @@ private struct WorkoutTemplateEditor: View {
                             }
                         }
                     }
+                    .raydiunScreen()
                     .navigationTitle("Choose Exercise")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -355,6 +361,7 @@ private struct TemplateExerciseEditor: View {
             Stepper("Rest: \(exercise.initialRestSeconds) seconds", value: $exercise.initialRestSeconds, in: 0...3600, step: 5)
                 .accessibilityIdentifier("exercise.rest")
         }
+        .raydiunScreen()
         .navigationTitle(name)
     }
 }

@@ -1,5 +1,9 @@
 # DECISIONS.md — Assumptions and Architecture Decision Log
 
+## iPhone dock appearance
+
+- The native tab layout comes from `slrky2/Raydiun`'s `iphone-workout-redesign-ci-fix` branch at `891a237`. iOS renders the bar with Today, Train, Coach, Log, and Progress. The tabs open the latest Raydiun screens, and Today’s header opens Profile beside Watch status.
+
 ## Assumptions for initial implementation
 - Product and Xcode project name: **Raydiun** (user-confirmed).
 - Single-user, English UI, iOS + watchOS, no account or server in V1.
@@ -73,3 +77,15 @@
 - The catalog combines the six starter exercises and locally saved custom exercises. Starter IDs retain their original values so existing templates resolve. A custom exercise keeps its UUID and creation date when edited. Templates resolve names from the catalog by ID.
 - Custom definitions are stored in a separate versioned JSON file in Application Support. Writes replace the file atomically. A catalog load failure blocks edits and offers a retry.
 - Names must be unique within the catalog after trimming leading and trailing whitespace and comparing case-insensitively. A custom exercise can change its own capitalization. All starter and custom entries are manual-only.
+
+### ADR-010 — Raydiun iPhone theme and dashboard
+- The owner’s light and dark Home mockups define the iPhone palette and layout. Both appearances share native SwiftUI components and follow the system appearance. Each tab has its own navigation stack. The Log tab opens Training Log, and Profile provides training setup, the walkthrough, and privacy settings.
+- Home projects the existing local schedule and workout journal. Weekly plan fulfillment requires a finished session with confirmed sets on the scheduled date and a matching template ID. Streaks and weekly reps use finished sessions with confirmed sets, and historical loads use the most recent confirmed weighted set by exercise ID.
+- The redesign needs no storage migration. The Watch status pill reports unavailable until a connection status source exists. The dashboard displays a previous user-entered load and omits estimated duration and target load until those values have a data source.
+
+### ADR-011 — Local training setup and recurring splits
+- First launch plays a bundled Raydiun mark animation before Welcome or Today. Returning installs with workout or template data open Today.
+- Training setup stores answers, draft routine IDs, and walkthrough progress on the iPhone. It generates equipment-appropriate routines from the manual exercise catalog. Generated routines remain editable with the same template editor as other routines.
+- A saved weekly split applies from its effective local date. Existing date-specific choices take precedence, and skipping a date suppresses that day's recurring workout. A later split version preserves earlier schedule lookups. Templates are upserted by draft ID before activation so the same save can be retried.
+- The first-workout walkthrough advances using committed journal entries and selection of the Log tab. It uses the normal manual workout flow.
+- Required Apple, Google, and email sign-up is deferred to a separate batch.

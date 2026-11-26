@@ -8,7 +8,19 @@ private enum StarterExercises {
         exercise(3, "Squat", "Legs"),
         exercise(4, "Bench Press", "Chest"),
         exercise(5, "Dumbbell Row", "Back"),
-        exercise(6, "Deadlift", "Posterior Chain")
+        exercise(6, "Deadlift", "Posterior Chain"),
+        exercise(7, "Bodyweight Squat", "Legs"),
+        exercise(8, "Goblet Squat", "Legs"),
+        exercise(9, "Push-Up", "Chest"),
+        exercise(10, "Dumbbell Floor Press", "Chest"),
+        exercise(11, "Prone Y Raise", "Back"),
+        exercise(12, "Glute Bridge", "Posterior Chain"),
+        exercise(13, "Dumbbell Romanian Deadlift", "Posterior Chain"),
+        exercise(14, "Incline Push-Up", "Chest"),
+        exercise(15, "Dumbbell Shoulder Press", "Shoulders"),
+        exercise(16, "Reverse Snow Angel", "Back"),
+        exercise(17, "Reverse Lunge", "Legs"),
+        exercise(18, "Standing Calf Raise", "Legs")
     ]
 
     private static func exercise(_ number: UInt8, _ name: String, _ category: String) -> ExerciseDefinition {
@@ -43,7 +55,9 @@ final class ExerciseLibrary {
     }
 
     func name(for id: UUID) -> String {
-        (exercises ?? StarterExercises.all).first { $0.id == id }?.name ?? "Unknown Exercise"
+        exercises?.first { $0.id == id }?.name
+            ?? StarterExercises.all.first { $0.id == id }?.name
+            ?? "Unknown Exercise"
     }
 
     func loadIfNeeded() {
@@ -53,7 +67,11 @@ final class ExerciseLibrary {
     func load() {
         do {
             let custom = try loadCustomExercises()
-            let catalog = StarterExercises.all + custom
+            let customNames = Set(custom.map { Self.nameKey($0.name) })
+            let starters = StarterExercises.all.enumerated().filter { index, exercise in
+                index < 6 || !customNames.contains(Self.nameKey(exercise.name))
+            }.map(\.element)
+            let catalog = starters + custom
             guard Set(catalog.map(\.id)).count == catalog.count,
                   Set(catalog.map { Self.nameKey($0.name) }).count == catalog.count,
                   custom.allSatisfy({ $0.isCustom && $0.supportTier == .manualOnly && !Self.nameKey($0.name).isEmpty })
